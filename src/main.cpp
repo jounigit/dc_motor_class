@@ -19,10 +19,6 @@ void setup() {
 
     Serial.println("Motor Shield found.");
     pinMode(pirIn, INPUT);
-    /*m1.startMotor();
-     m2.startMotor();
-    *m3.startMotor();
-    */
 }
 
 void loop() {
