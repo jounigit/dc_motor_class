@@ -25,8 +25,8 @@ void loop() {
   m1.update();
   int value = digitalRead(pirIn);
   if (value == HIGH) {
-      m2.update();
-      m3.update();
+      m2.startMotor();
+      m3.startMotor();
   }
   if (value == LOW) {
     m2.stopMotor();

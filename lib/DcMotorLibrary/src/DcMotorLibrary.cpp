@@ -16,42 +16,28 @@ DCMotor::DCMotor(
     init();
 }
 
-void DCMotor::init() {
-    this->startNow = false;
-    this->stopNow = false;
-}
-
 void DCMotor::startMotor() {
-    startNow = true;
-}
-
-void DCMotor::stopMotor() {
-    stopNow = true;
-}
-
-void DCMotor::update() {
-    if (startNow) {
         Serial.print("Run ");
         Serial.print(name);
         Serial.println('!');
-        startNow = false;
         motor->setSpeed(spd);
         motor->run(FORWARD);
         startTime = millis();
         running = true;
-    }
+}
 
-    if (stopNow) {
+void DCMotor::stopMotor() {
         Serial.print(name);
-        Serial.println(" Time Elapsed!");
-        stopNow = false;
-        motor->setSpeed(0);
+        // Serial.println(" Time Elapsed!");
+        // motor->setSpeed(0);
         motor->run(RELEASE);
         stopTime = millis();
         running = false;
-    }
+}
 
-    if (running && (millis() - startTime > runTime)) stopNow = true;
+void DCMotor::update() {
 
-    if (!running && (millis()-stopTime > pauseTime)) startNow = true;
+    if (running && (millis() - startTime > runTime)) stopMotor();
+
+    if (!running && (millis()-stopTime > pauseTime)) startMotor();
 }

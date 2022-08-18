@@ -16,8 +16,6 @@ private:
     unsigned long startTime; 
     unsigned long stopTime;
     unsigned long previousMillis; 
-    bool startNow;
-    bool stopNow;
     bool running;
 public:
     DCMotor(
@@ -27,7 +25,7 @@ public:
         unsigned long _pauseTime, 
         unsigned long _spd
     );
-    void init();
+
     void startMotor();
     void stopMotor();
     void update();
