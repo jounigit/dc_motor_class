@@ -26,7 +26,7 @@ void DCMotor::startMotor() {
 }
 
 void DCMotor::stopMotor() {
-        Serial.print(name);
+        // Serial.print(name);
         // Serial.println(" Time Elapsed!");
         // motor->setSpeed(0);
         motor->run(RELEASE);
