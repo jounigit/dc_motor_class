@@ -16,9 +16,9 @@ DCMotor::DCMotor(
 }
 
 void DCMotor::startMotor() {
-        Serial.print("Run ");
-        Serial.print(name);
-        Serial.println('!');
+        // Serial.print("Run ");
+        // Serial.print(name);
+        // Serial.println('!');
         motor->setSpeed(spd);
         motor->run(FORWARD);
         startTime = millis();
