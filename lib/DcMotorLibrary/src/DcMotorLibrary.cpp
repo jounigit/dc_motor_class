@@ -13,7 +13,6 @@ DCMotor::DCMotor(
     this->runTime = _runtime;
     this->pauseTime = _pauseTime;
     this->spd = _spd;
-    init();
 }
 
 void DCMotor::startMotor() {
