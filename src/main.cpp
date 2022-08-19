@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <DcMotorLibrary.h>
+#include <TimerEvent.h>
 
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 
@@ -11,15 +12,30 @@ const int sensorPin = 2;
 volatile byte state = LOW;
 
 const long interval = 10000;
-unsigned long currentTime;
-unsigned long startTrigger = 0;
-unsigned long stopTrigger = 0;
-boolean startTimer = false;
+unsigned long now;
+unsigned long startPeriod = 0;
+unsigned long stopPeriod = 0;
+boolean isMotion = false;
+
+// const unsigned int timerTwoPeriod = 13;
+// TimerEvent timerTwo;
 
 void detectsMovement() {
   Serial.println("Motion detected");
-  startTimer = true;
-  startTrigger = millis();
+  isMotion = true;
+  startPeriod = millis();
+}
+
+// void timerTwoFunc() {
+//   m2.startMotor();
+// }
+
+void myTimer(unsigned long myPeriod) {
+  if(millis() - startPeriod >= myPeriod) {
+    Serial.println("Motion stopped...");
+    stopPeriod = millis();
+    isMotion = false;
+  }
 }
 
 void setup() {
@@ -28,23 +44,27 @@ void setup() {
 
   Serial.println("Motor Shield found.");
   pinMode(sensorPin, INPUT_PULLUP);
+  // timerTwo.set(timerTwoPeriod, timerTwoFunc);
   attachInterrupt(digitalPinToInterrupt(sensorPin), detectsMovement, CHANGE);
 }
 
 void loop() {
   m1.update();
-  currentTime = millis();
+  now = millis();
 
-  if(startTimer && (millis() - startTrigger > interval)) {
+  if(isMotion) myTimer(interval);
+
+  /* if(isMotion && (now - startPeriod > interval)) {
     Serial.println("Motion stopped...");
-    stopTrigger = millis();
-    startTimer = false;
-  }
+    stopPeriod = millis();
+    isMotion = false;
+  } */
 
-  (startTimer) ? m2.startMotor() : m2.stopMotor();
+  (isMotion && (now - startPeriod > 5000)) ? m2.startMotor() : m2.stopMotor();
+  // (isMotion) ? timerTwo.update() : timerTwo.disable();
 
 
-  if (startTimer && (millis() - startTrigger > 3000)) m3.startMotor();
+  if (isMotion && (now - startPeriod > 3000)) m3.startMotor();
 
-  if (!startTimer && (millis() - stopTrigger > 5000)) m3.stopMotor();
+  if (!isMotion && (now - stopPeriod > 5000)) m3.stopMotor();
 }
